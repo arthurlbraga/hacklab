@@ -18,11 +18,12 @@ RUN apk update && \
 		tzdata \
 		nmap \
 		py3-pip \
-		nikto \
 		nano \
 		go \
 		hydra \
-		build-base
+		build-base \
+		zsh \
+		perl
 
 
 # tzdata
@@ -32,8 +33,10 @@ RUN cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 RUN cd /tmp && \
 	curl https://sh.rustup.rs -o rustup.sh && \
 	chmod +x rustup.sh && \
-	./rustup.sh -y && \
-	source ~/.profile
+	./rustup.sh -y
+
+ENV CARGOPATH /root/.cargo
+ENV PATH ${CARGOPATH}/bin:${PATH}
 
 # Oh-My-Zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -46,22 +49,20 @@ RUN cd ${HOME}/wordlists && \
 ENV GOPATH /root/go
 ENV PATH ${GOPATH}/bin:${PATH}
 
-# zsh
-RUN git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh &&\
-    cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc &&\
-    chsh -s /bin/zsh && \
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/.zsh-syntax-highlighting" --depth 1 && \
-    echo "source $HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> "$HOME/.zshrc"
-
 # gobuster
-go install github.com/OJ/gobuster/v3@latest
+RUN go install github.com/OJ/gobuster/v3@latest
 
 # rustscan
 RUN cd ${HOME}/toolkit && \
 	git clone https://github.com/RustScan/RustScan.git && \
 	cd RustScan && \
 	cargo build && \
-	ln -sf target/debug/rustscan /usr/bin/rustscan
+	ln -sf $('pwd')/target/debug/rustscan /usr/bin/rustscan
 
 # amass
 RUN go install -v github.com/OWASP/Amass/v3/...@master
+
+# nikto
+RUN cd ${HOME}/toolkit && \
+	git clone https://github.com/sullo/nikto && \
+	ln -sf $('pwd')/nikto/program/nikto.pl /usr/bin/nikto

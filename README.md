@@ -1,8 +1,12 @@
+## Usage
+
+docker build -t hacklab .
+
 ## Supported Tools
 
-- [ ] Amass
-- [ ] Gobuster
-- [ ] Hydra
-- [ ] Nmap
-- [ ] Nikto
-- [ ] Rustscan
+- [x] Amass
+- [x] Gobuster
+- [x] Hydra
+- [x] Nmap
+- [x] Nikto
+- [x] Rustscan
