@@ -1,6 +1,8 @@
 ## Usage
 
-docker build -t hacklab .
+```sh
+docker build -t hacklab . && docker run -it --name hacklab hacklab:latest /bin/zsh
+```
 
 ## Supported Tools
 
