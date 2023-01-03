@@ -23,7 +23,8 @@ RUN apk update && \
 		hydra \
 		build-base \
 		zsh \
-		perl
+		perl \
+		openssl-dev
 
 
 # tzdata
@@ -66,3 +67,10 @@ RUN go install -v github.com/OWASP/Amass/v3/...@master
 RUN cd ${HOME}/toolkit && \
 	git clone https://github.com/sullo/nikto && \
 	ln -sf $('pwd')/nikto/program/nikto.pl /usr/bin/nikto
+
+# john
+RUN cd ${HOME}/toolkit && \
+	git clone https://github.com/openwall/john.git && \
+	cd john/src && \
+	./configure && make && \
+	echo "alias john='/root/toolkit/john/run/john'" >> ${HOME}/.zshrc
